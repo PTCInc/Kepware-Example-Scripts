@@ -1,0 +1,6 @@
+{
+	"logGroupName" : "LogGroup1",
+	"importPath" : "csvs/logitems_example.csv",
+	"apiUser" : "Administrator",
+	"apiPassword" : ""
+}

@@ -1,0 +1,3 @@
+Item_Name,Item_ID,Numeric_Alias,Data_Type,Deadband_Type,Deadband,Range_Low,Range_High,Description
+Tag1,Channel1.Device1.Tag1,0,Word,0,0,0,0,My Description for Item1
+Tag2,Channel1.Device1.Tag2,1,Word,0,0,0,0,My Description for Item2
