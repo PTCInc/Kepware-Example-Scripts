@@ -1,0 +1,9 @@
+{
+	"iot_gateway.IOT_ITEM_SERVER_TAG": "bacnetDevices.d1.ai1",
+	"iot_gateway.IOT_ITEM_USE_SCAN_RATE": true,
+	"iot_gateway.IOT_ITEM_SCAN_RATE_MS": 60000,
+	"iot_gateway.IOT_ITEM_SEND_EVERY_SCAN": true,
+	"iot_gateway.IOT_ITEM_DEADBAND_PERCENT": 0,
+	"iot_gateway.IOT_ITEM_ENABLED": true,
+	"iot_gateway.IOT_ITEM_DATA_TYPE": 8
+}

@@ -1,0 +1,8 @@
+{
+    "configApiUsername": "administrator",
+    "configApiPassword": "",
+    "name": "device",
+    "hubName": "myCloudHub1",
+    "sasLen": 3600,
+    "agentFile": "kepware_object_snippets/agents.json"
+}
