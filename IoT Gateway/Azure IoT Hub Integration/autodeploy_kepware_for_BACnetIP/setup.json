@@ -1,0 +1,6 @@
+{
+    "configApiUsername": "administrator",
+    "configApiPassword": "",
+    "channel_name": "channel1",
+    "path": "csvs/source.csv"
+}
