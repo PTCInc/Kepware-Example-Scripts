@@ -1,0 +1,27 @@
+Item_Name,Item_ID,Numeric_Alias,Data_Type,Deadband_Type,Deadband,Range_Low,Range_High,Description
+LogItem1,Simulation Examples.Functions.Ramp1,0,Long,0,0,0,0,
+LogItem10,Simulation Examples.Functions.Random2,0,Word,0,0,0,0,
+LogItem11,Simulation Examples.Functions.Random3,0,Long,0,0,0,0,
+LogItem12,Simulation Examples.Functions.Random4,0,Long,0,0,0,0,
+LogItem13,Simulation Examples.Functions.Random5,0,Long,0,0,0,0,
+LogItem14,Simulation Examples.Functions.Random6,0,LLong,0,0,0,0,
+LogItem15,Simulation Examples.Functions.Random7,0,QWord,0,0,0,0,
+LogItem16,Simulation Examples.Functions.Random8,0,QWord,0,0,0,0,
+LogItem17,Simulation Examples.Functions.Sine1,0,Float,0,0,0,0,
+LogItem18,Simulation Examples.Functions.Sine2,0,Float,0,0,0,0,
+LogItem19,Simulation Examples.Functions.Sine3,0,Float,0,0,0,0,
+LogItem2,Simulation Examples.Functions.Ramp2,0,Float,0,0,0,0,
+LogItem20,Simulation Examples.Functions.Sine4,0,Float,0,0,0,0,
+LogItem21,Simulation Examples.Functions.User1,0,String,0,0,0,0,
+LogItem22,Simulation Examples.Functions.User2,0,Float,0,0,0,0,
+LogItem23,Simulation Examples.Functions.User3,0,Boolean,0,0,0,0,
+LogItem24,Simulation Examples.Functions.User4,0,String,0,0,0,0,
+LogItem3,Simulation Examples.Functions.Ramp3,0,Word,0,0,0,0,
+LogItem4,Simulation Examples.Functions.Ramp4,0,Long,0,0,0,0,
+LogItem5,Simulation Examples.Functions.Ramp5,0,LLong,0,0,0,0,
+LogItem6,Simulation Examples.Functions.Ramp6,0,QWord,0,0,0,0,
+LogItem7,Simulation Examples.Functions.Ramp7,0,LLong,0,0,0,0,
+LogItem8,Simulation Examples.Functions.Ramp8,0,Double,0,0,0,0,
+LogItem9,Simulation Examples.Functions.Random1,0,Short,0,0,0,0,DataLogger description
+Tag1,Channel1.Device1.Tag1,0,Word,0,0,0,0,My Description for Item1
+Tag2,Channel1.Device1.Tag2,1,Word,0,0,0,0,My Description for Item2
