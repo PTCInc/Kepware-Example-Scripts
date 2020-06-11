@@ -1,5 +1,8 @@
 # ******************************************************************************
-#  
+# -------------------------------------------------------------------------
+# Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
+# See License.txt in the project root for license information.
+# --------------------------------------------------------------------------
 #  Description: 
 #		Created as a replacement for DataLogger's CSV Export.  This script uses
 #		the Configuration API to export a the specified log group to a CSV file
