@@ -8,5 +8,5 @@ There is a Kepware project file [NodeJsSample.opf](NodeJsSample.opf) that has th
 
 ## Dependencies
 
-[Request HTTP Client](https://github.com/request/request)
-[Node.js](https://nodejs.org/)
+- [Request HTTP Client](https://github.com/request/request)
+- [Node.js](https://nodejs.org/)
