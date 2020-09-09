@@ -1,11 +1,10 @@
-# Count the number of channels and devices in a Kepware Server Project
+# Count the number of channels, devices, and channels by driver type in a running Kepware Server project
 
 ## Install Python and the Kepware Config API Python SDK
 
 1. Download [Python](https://www.python.org/downloads/)
 2. During the install, check Add Python 3.x to PATH
-3. Download and extract Kepware Config API Python SDK from https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python
-4. Within the extracted contents, run setup.py to install Kepware Config API Python SDK
+3. Download and install the Kepware Config API Python SDK from https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python
 
 ## Enable the Kepware Server Configuration API
 
