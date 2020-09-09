@@ -1,11 +1,12 @@
 # -------------------------------------------------------------------------
-# Copyright (c) 2020, PTC Inc. and/or all its affiliates. All rights reserved.
+# Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
 # See License.txt in the project root for license information.
 # --------------------------------------------------------------------------
 
-# Uses a target Kepware Server's Configuration API to count the number of channel
-# and device objects present in the server project
+# Uses a target Kepware Server's Configuration API to count the number channels, 
+# devices, and channels per driver type
 
+from collections import Counter
 from kepconfig import connection, error
 from kepconfig.connectivity import channel, device
 
@@ -42,17 +43,26 @@ def HTTPErrorHandler(err):
 # the Kepware configuration
 server = connection.server(host = '127.0.0.1', port = 57412, user = 'Administrator', pw = '')
 
-# Count channels and devices in the project
+# Define variables
+channel_count = 0
+device_count = 0
+
+# Use KepConfigAPI to get list of all devices for specified channel
 try:
-    channel_count = 0
-    device_count = 0
-    # Use KepConfigAPI to get list of all devices for specified channel
     channel_list = channel.get_all_channels(server)
-    for i in channel_list:
-            channel_count += 1
-            channel_name = i['common.ALLTYPES_NAME']
-            # Call local discover_devices function to return counted devices per channel name
-            device_count = device_count + discover_devices(channel_name)
-    print("{} {} {} {}".format("Channel Count:", channel_count, ", Device Count:", device_count))
 except Exception as err:
     HTTPErrorHandler(err)
+
+for i in channel_list:
+        channel_count += 1
+        channel_name = i['common.ALLTYPES_NAME']
+        # Call local discover_devices function to return counted devices per channel name
+        try:
+            device_count = device_count + discover_devices(channel_name)
+        except Exception as err:
+            HTTPErrorHandler(err)
+        # Use Counter to identify channel counts by driver
+        driver_counts = Counter(i['servermain.MULTIPLE_TYPES_DEVICE_DRIVER'] for i in channel_list)
+        driver_counts = dict(driver_counts)
+
+print("{} {} {} {} {} {}".format("Channel Count:", channel_count, ", Device Count:", device_count, ", Channel Count by Driver:", driver_counts))
