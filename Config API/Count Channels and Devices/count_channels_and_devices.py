@@ -53,6 +53,8 @@ try:
 except Exception as err:
     HTTPErrorHandler(err)
 
+drivers_used = []
+
 for i in channel_list:
         channel_count += 1
         channel_name = i['common.ALLTYPES_NAME']
@@ -61,8 +63,10 @@ for i in channel_list:
             device_count = device_count + discover_devices(channel_name)
         except Exception as err:
             HTTPErrorHandler(err)
-        # Use Python Counter type to identify channel counts by driver
-        driver_counts = Counter(i['servermain.MULTIPLE_TYPES_DEVICE_DRIVER'] for i in channel_list)
-        driver_counts = dict(driver_counts)
+        drivers_used.append(i['servermain.MULTIPLE_TYPES_DEVICE_DRIVER'])
+
+# Use Python Counter type to identify channel counts by driver
+driver_counts = Counter(drivers_used)
+driver_counts = dict(driver_counts)
 
 print("{} {} {} {} {} {}".format("Channel Count:", channel_count, ", Device Count:", device_count, ", Channel Count by Driver:", driver_counts))
