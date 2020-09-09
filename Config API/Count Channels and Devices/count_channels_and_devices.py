@@ -47,7 +47,7 @@ server = connection.server(host = '127.0.0.1', port = 57412, user = 'Administrat
 channel_count = 0
 device_count = 0
 
-# Use KepConfigAPI to get list of all devices for specified channel
+# Use KepConfigAPI to get list of all channels in server project
 try:
     channel_list = channel.get_all_channels(server)
 except Exception as err:
@@ -56,12 +56,12 @@ except Exception as err:
 for i in channel_list:
         channel_count += 1
         channel_name = i['common.ALLTYPES_NAME']
-        # Call local discover_devices function to return counted devices per channel name
+        # Call local discover_devices() to return counted devices per channel name and add to device counter
         try:
             device_count = device_count + discover_devices(channel_name)
         except Exception as err:
             HTTPErrorHandler(err)
-        # Use Counter to identify channel counts by driver
+        # Use Python Counter type to identify channel counts by driver
         driver_counts = Counter(i['servermain.MULTIPLE_TYPES_DEVICE_DRIVER'] for i in channel_list)
         driver_counts = dict(driver_counts)
 
