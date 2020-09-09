@@ -4,7 +4,7 @@
 
 1. Download [Python](https://www.python.org/downloads/)
 2. During the install, check Add Python 3.x to PATH
-3. Download and install the Kepware Config API Python SDK from https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python
+3. Download and install the [Kepware Config API Python SDK](https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python)
 
 ## Enable the Kepware Server Configuration API
 
