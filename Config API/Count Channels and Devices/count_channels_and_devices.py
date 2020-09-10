@@ -39,8 +39,7 @@ def HTTPErrorHandler(err):
         print('Different Exception Received: {}'.format(err))
 
 
-# This creates a server reference that is used to target all modifications of 
-# the Kepware configuration
+# This creates a server reference that is used to target all modifications of the Kepware configuration
 server = connection.server(host = '127.0.0.1', port = 57412, user = 'Administrator', pw = '')
 
 # Define variables
@@ -48,12 +47,13 @@ channel_count = 0
 device_count = 0
 idriver = []
 
-# Use KepConfigAPI to get list of all channels in server project
+# Get list of all channels in server project
 try:
     channel_list = channel.get_all_channels(server)
 except Exception as err:
     HTTPErrorHandler(err)
 
+# Get the driver type and device count per channel
 for i in channel_list:
         channel_count += 1
         channel_name = i['common.ALLTYPES_NAME']
