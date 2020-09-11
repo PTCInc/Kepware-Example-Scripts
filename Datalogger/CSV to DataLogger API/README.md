@@ -1,4 +1,4 @@
-# Import V6.6 and older Datalogger Log Items CSV export to V6.7+ Datalogger Configuration API calls
+# Import Datalogger Log Items from CSV using the Configuration API
 
 ## Install Python
 
