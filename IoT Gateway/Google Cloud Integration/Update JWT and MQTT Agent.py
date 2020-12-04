@@ -1,6 +1,22 @@
 # -------------------------------------------------------------------------
 # Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
 # --------------------------------------------------------------------------
+# ******************************************************************************
+# -------------------------------------------------------------------------
+# Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
+# See License.txt in the project root for
+# license information.
+# --------------------------------------------------------------------------
+#  Description: 
+#       This script creates a JWT based on the parameters specified such as 
+#       Google Cloud project ID and private key file and then updates the
+#       password field of desired MQTT Agent.
+#
+#  Procedure:
+#       Create a JWT
+#       Update MQTT AGent with creted JWT
+#
+# ******************************************************************************/
 
 from kepconfig import connection, error
 import kepconfig.iot_gateway as IoT
@@ -38,7 +54,8 @@ def create_jwt(project_id, private_key_file, algorithm):
     return jwt.encode(token, private_key, algorithm=algorithm)
 # [END iot_mqtt_jwt]
 
-jwt=create_jwt(project_id, private_key_file, algorithm='RS256').decode("utf-8") # Create JWT and Convert into String
+# Create JWT and Convert into String
+jwt=create_jwt(project_id, private_key_file, algorithm='RS256').decode("utf-8") 
 
 def HTTPErrorHandler(err):
     # Generic Handler for exception errors
