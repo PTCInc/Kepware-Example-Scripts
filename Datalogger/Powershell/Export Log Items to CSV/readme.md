@@ -1,6 +1,6 @@
-# Export Log Items to a CSV file
-
 ## This is script is for example and instructional purposes only.
+
+# Export Log Items to a CSV file
 
 ## Purpose: 
 - For a given Log Group, export all Log Items (i.e. tag references) to a CSV file
