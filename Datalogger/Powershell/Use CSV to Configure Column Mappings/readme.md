@@ -3,7 +3,7 @@
 Use a CSV file to configure wide format column mappings
    
 ## Purpose: 
-    - For a given Log Group, automatically configure tag-to-column mappings using a source CSV file
+- For a given Log Group, automatically configure tag-to-column mappings using a source CSV file
 
 ## To use:
 - Add desired tags to Log Group using GUI or API
@@ -11,7 +11,7 @@ Use a CSV file to configure wide format column mappings
 - Update 'csvs/columnMappings.csv' with desired tag mapping scheme, data types and lengths
 - Update 'auth' with Kepware Config API username and password
 
-##Notes:
+## Notes:
 - To quickly and easily source full tag paths (chan.dev.<folders>.name) of log items with column mappings desired for custom configuration, run the helper script "exportLogItemsToCsv.ps1" and copy the "datalogger.LOG_ITEM_ID" column from the exported CSV into the "Log_Item_ID" column of the columnMappings.csv file.
 - SQL Data Type Enumerations and (Lengths) 
 --- Integer = 7 (4)
