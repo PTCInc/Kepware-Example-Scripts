@@ -1,6 +1,6 @@
 ## This is script is for example and instructional purposes only.
 
-Use a CSV file to configure wide format column mappings
+# Use a CSV file to configure wide format column mappings
    
 ## Purpose: 
 - For a given Log Group, automatically configure tag-to-column mappings using a source CSV file
