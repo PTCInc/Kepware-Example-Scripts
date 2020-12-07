@@ -1,0 +1,5 @@
+Tag Path,Tag Name,Address,Data Type,Respect Data Type,Client Access,Scan Rate,Scaling,Raw Low,Raw High,Scaled Low,Scaled High,Scaled Data Type,Clamp Low,Clamp High,Eng Units,Description,Negate Value
+Channel1.Device1.,Tag1,,Word,1,R/W,100,,,,,,,,,,,
+Channel1.Device1.,Tag2,,,,,,,,,,,,,,,,
+Channel1.Device1.,Tag3,,,,,,,,,,,,,,,,
+Channel1.Device1.,Tag4,,,,,,,,,,,,,,,,
