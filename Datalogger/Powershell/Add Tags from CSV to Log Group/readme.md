@@ -1,14 +1,12 @@
-## This is script is for example and instructional purposes only.
-
 # Add tags from CSV to Log Group
 
 ## Purpose: 
 - Add a set of tags within a CSV file to a target Log Group
 
 ## To use:
-- Update 'csvs/deviceItems.csv' with desired set of tag paths and tag names (see Notes section below)
-- Update 'csvs/logGroup.csv' with target Log Group
-- Update 'csvs/auth.csv' with Kepware Username and Password for use with the Config API
+- Update [csvs/deviceItems.csv](csvs/deviceItems.csv) with desired set of tag paths and tag names (see Notes section below)
+- Update [csvs/logGroup.csv](csvs/logGroup.csv) with target Log Group
+- Update [csvs/auth.csv](csvs/logGroup.csv) with Kepware Username and Password for use with the Config API
 
 ## Notes:
 - To quickly get started, export a device or folder's tag set to a CSV file using the GUI or via an API script and add a column called "Tag Path"; 
