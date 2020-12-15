@@ -5,7 +5,7 @@ This script creates a JWT based on the parameters satisfied in the code and then
 ## Dependencies
 
 - [Kepware Configuration API SDK for Python](https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python)
-- [Python JWT library](https://pypi.org/project/jwt/)
+- [PyJWT library](https://pyjwt.readthedocs.io/en/stable/)
 
 
 ## Notes
