@@ -1,0 +1,5 @@
+﻿Tag Name,Address,Data Type,Respect Data Type,Client Access,Scan Rate,Scaling,Raw Low,Raw High,Scaled Low,Scaled High,Scaled Data Type,Clamp Low,Clamp High,Eng Units,Description,Negate Value
+"Tag1","DB1.D0",DWord,1,R/W,100,,,,,,,,,,"",
+"Tag2","DB2.D0",DWord,1,R/W,100,,,,,,,,,,"",
+"Tag3","DB3.D0",DWord,1,R/W,100,,,,,,,,,,"",
+"Tag4","DB4.D0",DWord,1,R/W,100,,,,,,,,,,"",

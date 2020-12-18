@@ -1,0 +1,7 @@
+{
+	"driver" : "Siemens TCP/IP Ethernet",
+	"deviceID" : "10.10.110.131",
+	"deviceName" : "Device1",
+	"deviceModel" : 3,
+	"tagPath" : "./Tags/SiemensExample.csv"
+}

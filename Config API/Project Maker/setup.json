@@ -1,0 +1,20 @@
+{
+    "api": [
+        {
+            "host" : "127.0.0.1",
+            "port" : "57412",
+            "apiUsername" : "Administrator",
+            "apiPassword" : ""
+        }
+    ],
+    "mqtt": [
+        {
+            "url" : "tcp://localhost:1883",
+            "topic" : "iotgateway",
+            "publishRate" : 1000,
+            "ClientID" : "",
+            "mqttUsername" : "",
+            "mqttPassword" : ""
+        }
+    ]
+}

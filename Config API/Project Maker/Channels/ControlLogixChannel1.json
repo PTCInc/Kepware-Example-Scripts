@@ -1,0 +1,7 @@
+{
+	"driver" : "Allen-Bradley ControlLogix Ethernet",
+	"deviceID" : "10.10.114.23,1,0",
+	"deviceName" : "Device1",
+	"deviceModel" : 1,
+	"tagPath" : "./Tags/ControlLogixExample.csv"
+}

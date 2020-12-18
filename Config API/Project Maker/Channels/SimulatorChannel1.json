@@ -1,0 +1,7 @@
+{
+	"driver" : "Simulator",
+	"deviceID" : "1",
+	"deviceName" : "Device1",
+	"deviceModel" : 0,
+	"tagPath" : "./Tags/SimulatorAllDataTypes.csv"
+}
