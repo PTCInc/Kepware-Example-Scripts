@@ -35,7 +35,7 @@
 Function Get-Header {
     $csv1 = $PSScriptRoot + "/csvs/auth.csv"
     $auth = Import-Csv $csv1
-    $username = $auth.'Username'
+    $username = $auth.'UserName'
     $password = $auth.'Password'
     $credPair = "$($username):$($password)"
     $encodedCredentials = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("$credPair"))
@@ -94,7 +94,7 @@ foreach ($x in $columnMappings) {
                 $column = $n.'common.ALLTYPES_NAME'
                 $uriColumnNumber = "http://127.0.0.1:57412/config/v1/project/_datalogger/log_groups/$($logGroup.Log_Group)/column_mappings/$($column)"
                 $body = ConvertTo-Json $n
-                Invoke-RestMethod -Uri $uriColumnNumber -Method 'PUT' -Headers $headers -Body $body
+                Invoke-RestMethod -Uri $uriColumnNumber -Method 'PUT' -Headers (Get-Header) -Body $body
         }
     }
 }
