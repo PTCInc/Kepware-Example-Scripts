@@ -1,7 +1,0 @@
-{
-	"driver" : "Modbus TCP/IP Ethernet",
-	"deviceID" : "10.10.110.131",
-	"deviceName" : "Device1",
-	"deviceModel" : 0,
-	"tagPath" : "./Tags/ModbusExample.csv"
-}
