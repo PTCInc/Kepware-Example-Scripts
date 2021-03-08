@@ -1,0 +1,10 @@
+{
+	"source" : "LocalHost",
+	"sourceFolder" : "myFolder",
+	"destination" : "",
+	"destinationFolder" : "C:\\Projects",
+	"apiUser" : "Administrator",
+	"apiPassword" : "",
+	"sshUser" : "",
+	"sshPassword" : ""
+}
