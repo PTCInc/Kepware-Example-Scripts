@@ -121,7 +121,7 @@ Function Get-Folder ($initialDirectory) {
 
 $Form                            = New-Object system.Windows.Forms.Form
 $Form.ClientSize                 = New-Object System.Drawing.Point(400,500)
-$Form.text                       = "Oden Technologies -  MQTT Client Setup v3"
+$Form.text                       = "MQTT Client Setup"
 $Form.TopMost                    = $true
 
 $AdminLogin                      = New-Object system.Windows.Forms.TextBox
