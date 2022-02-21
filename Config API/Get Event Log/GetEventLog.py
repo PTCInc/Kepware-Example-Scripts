@@ -23,6 +23,14 @@ import datetime
 # This creates a server reference that is used to target all modifications of the Kepware configuration
 server = connection.server(host = '127.0.0.1', port = 57412, user = 'Administrator', pw = '')
 
+# Global Variables - Update as needed
+
+# FiletoPath should include: an absolute path like "C:/Users/testUser/Destop" if file needs to be saved on the local machine
+#                            an UNC path "//servername/path" if the file needs to be saved on a different shared network drive 
+DIR = "PathToFile"
+
+# length of time to look back in request - in Minutes
+INTERVAL = 30
 
 # Generic Handler for exception errors
 def HTTPErrorHandler(err):
@@ -40,16 +48,13 @@ def HTTPErrorHandler(err):
 
 # Calculate a 30 minutes polling interval for the Event Log retrieval
 currentDate = datetime.datetime.utcnow()
-hours = 0.5
-hoursSubstracted = datetime.timedelta(hours = hours)
+hoursSubstracted = datetime.timedelta(minutes = INTERVAL)
 previousDate = currentDate - hoursSubstracted
 
 # Create a TKS Event Log file with date appended to the name
 fileName='TKS Log ' + datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
-filePath = "PathToFile" + fileName
-# FiletoPath should include: an absolute path like "C:/Users/testUser/Destop" if file needs to be saved on the local machine
-#                            an UNC path "//servername/path" if the file needs to be saved on a different shared network drive 
-# 
+filePath = DIR + fileName
+
 # This is needed so the script can be executed as a scheduled task 
 
 
