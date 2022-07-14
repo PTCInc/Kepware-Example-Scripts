@@ -1,0 +1,8 @@
+{
+	"primaryHost" : "127.0.0.1",
+	"primaryPort" : "57418",
+	"secondaryHost" : "127.0.0.1",
+	"secondaryPort" : "57412",
+	"apiUsername" : "Administrator",
+	"apiPassword" : ""
+}
