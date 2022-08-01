@@ -5,16 +5,14 @@
 # ------------------------------------------------------------------------------
 # 
 # Description: 
-# This script is to be run on the secondary server and will disable or enable all 
+# This script is to be run on the secondary Kepware server and will disable or enable all 
 # supported features including devices, DataLogger groups, IoT Gateway Agents, 
 # Schedules and EFM Exporters when the primary server goes offline.  The health 
-# of the primary is determined by connecting to the Configuration API port, but a 
+# of the primary is determined by verifying the port for the Configuration API is open, but a 
 # ping can also be used.
 # 
 # Requires:
-# Python on Primary PC with Requests library
-#
-# Todo:
+# Python on secondary Kepware server PC with Requests library
 #
 # ******************************************************************************/
 
