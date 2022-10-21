@@ -20,10 +20,10 @@
 # -Add options for scheduling and/or project change detection 
 # 
 # Change History:
-#  v0.0.2 - Updated to kepconfig SDK package for Config API handling and 
+#  v0.2.0 - Updated to kepconfig SDK package for Config API handling and 
 # 		removed Requests as requirement
 #
-#  v0.0.2
+#  v0.2.0
 # ******************************************************************************/
 
 import json
