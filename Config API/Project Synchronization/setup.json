@@ -1,7 +1,9 @@
 {
 	"source" : "LocalHost",
+	"sourcePort": 57412,
 	"sourceFolder" : "myFolder",
 	"destination" : "",
+	"destinationPort": 57412,
 	"destinationFolder" : "C:\\Projects",
 	"apiUser" : "Administrator",
 	"apiPassword" : "",
