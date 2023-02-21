@@ -11,25 +11,46 @@
 # mechanisms instead.
 # 
 # Requires:
-# -Python on Primary PC with Requests and Paramiko
+# -Python on Primary PC with Kepconfig SDK and Paramiko packages
 # -OpenSSH on Secondary PC (or other mechanism to copy a project from from the 
 #  Primary to the Secondary PC)
 #
 # Todo:
-# -Fix JSON so that destinationFolder doesn't require 4 backslashes.  Current 
-#  workaround is to use "(repr(destinationFolder).replace('\'','')" 
 # -Maybe check the registry for the correct location of ProgramData
 # -Add options for scheduling and/or project change detection 
+# 
+# Change History:
+#  v0.2.0 - Updated to kepconfig SDK package for Config API handling and 
+# 		removed Requests as requirement
 #
+#  v0.2.0
 # ******************************************************************************/
 
 import json
-import requests
 import time
 import paramiko
 import os 
+import kepconfig
+import kepconfig.error as error
 
 print(os.environ["ProgramData"])
+
+def ErrorHandler(err):
+	print("-- An error has occurred: ")
+    # Generic Handler for exception errors
+	if err.__class__ is error.KepError:
+		print(err.msg)
+	elif err.__class__ is error.KepHTTPError:
+		print(err.code)
+		print(err.msg)
+		print(err.url)
+		print(err.hdrs)
+		print(err.payload)
+	elif err.__class__ is error.KepURLError:
+		print(err.url)
+		print(err.reason)
+	else:
+		print('Different Exception Received: {}'.format(err))
 
 def get_parameters(setup_file):
 	try:
@@ -42,24 +63,25 @@ def get_parameters(setup_file):
 		print("-- Setup data failed to load - '{}'".format(e))
 		return False
 
-def save_source_project():
+def save_source_project(server: kepconfig.connection.server):
 	try:
-		print("Saving project file on '{}'".format(source))
+		print("Saving project file on '{}'".format(server.host))
 		
 		unixTime = str(time.time()).replace('.', '') #Use UNIX time to generate a unique filename
 		fileName = "Project_{}.opf".format (unixTime)
-		url = "http://{}:57412/config/v1/project/services/ProjectSave".format (source)
-		payload = "{{\"servermain.PROJECT_FILENAME\": \"{}\\\\{}\"}}".format (sourceFolder,fileName)
-		response = requests.put(url, auth=(apiUsername, apiPassword), data=(payload))
 		
-		if response:
-			print("-- Project save successful - '<ProgramData>\Kepware\KEPServerEX\V6\{}\\{}'".format(sourceFolder,fileName))
-		else:
-			print("-- An error has occurred: " + str(response.text))
-			
+		job = server.save_project('{}\\{}'.format(sourceFolder,fileName))
+		
+		# check job status for completion
+		while True:
+			time.sleep(1)
+			status = server.service_status(job)
+			if (status.complete == True): break
+		print("-- Project save successful - '<ProgramData>\Kepware\KEPServerEX\V6\{}\\{}'".format(sourceFolder,fileName))
 		return fileName
 	except Exception as e:
-		print("-- Project failed to save - '{}'".format(e))
+		print("-- Project failed to save --")
+		ErrorHandler(e)
 		return False
 		
 def move_source_project():
@@ -87,48 +109,54 @@ def move_source_project():
 		print("-- Project move failed - '{}'".format(e))
 		return False
 
-def load_destination_project():
+def load_destination_project(server: kepconfig.connection.server):
 	try:
 		print("Loading project file on '{}'".format(destination))
 		
-		url = "http://{}:57412/config/v1/project/services/ProjectLoad".format (destination)
-		payload = "{{\"servermain.PROJECT_FILENAME\": \"{}\\\\{}\"}}".format (repr(destinationFolder).replace('\'',''),projectName)
-
-		#print(payload)
-		response = requests.put(url, auth=(apiUsername, apiPassword), data=(payload))
+		job = server.load_project('{}\\{}'.format(destinationFolder,projectName))
 		
-		if response:
-			print("-- Project load succeeded")
-		else:
-			print("-- An error has occurred: " + str(response.text))
-			
+		# check job status for completion
+		while True:
+			time.sleep(1)
+			status = server.service_status(job)
+			if (status.complete == True): break
+		print("-- Project load successful - '{}\\{}'".format(destinationFolder,projectName))
 		return
 	except Exception as e:
-		print("-- Project load failed - '{}'".format(e))
+		print("-- Project load failed --")
+		ErrorHandler(e)
 		return False
 
 # load setup parameters
-setupFilePath = 'setup.json'
+setupFilePath = './Config API/Project Synchronization/setup.json'
 setupData = get_parameters(setupFilePath)
 
 # assign global variables
 source = setupData['source']
+sourcePort = setupData['sourcePort']
 sourceFolder = setupData['sourceFolder']
 destination = setupData['destination']
+destinationPort = setupData['destinationPort']
 destinationFolder = setupData ['destinationFolder']
 apiUsername = setupData['apiUser']
 apiPassword = setupData['apiPassword']
 sshUsername = setupData['sshUser']
 sshPassword = setupData['sshPassword']
 
+server_source = kepconfig.connection.server(source, sourcePort, apiUsername, apiPassword, https=False)
+server_dest = kepconfig.connection.server(destination, destinationPort, apiUsername, apiPassword, https=False)
+
 # save source project
-projectName = save_source_project()
+projectName = save_source_project(server_source)
+if projectName is False:
+	# TODO Failures
+	pass
 
 # move project using sftc over ssh
 move_source_project()
 
 # load destination project
-load_destination_project()
+load_destination_project(server_dest)
 
 print()
 print("Press any key...")
