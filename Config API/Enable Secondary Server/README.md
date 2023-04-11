@@ -18,7 +18,7 @@ This script is to be run on the secondary server and will disable or enable all 
 
 1. View [setup.json](setup.json) in a text editor
 2. Set source, destination, and folder locations
-3. Set username and password for the API and SSH users
+3. Set username and password for the API user
 
 ## Run the Script
 
