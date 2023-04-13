@@ -5,7 +5,10 @@ This script is run on the primary server to copy the entire project file to a se
 ## Install Python
 
 1. Download [Python](https://www.python.org/downloads/)
-2. During the install, check Add Python 3.x to PATH
+2. During the install
+    • Check box "Add python.exe to PATH" (can also be added later under "Advanced Options", check "Add Python to environment variables")
+    • Select "Customized Installation"
+    • Under "Optional Features", select "pip"
 3. From a CMD, type ‘pip install kepconfig’ to install the [Kepware Config API SDK](https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python) library
 4. From a CMD, type ‘pip install paramiko' to install the [Paramiko](https://www.paramiko.org/) library
 
