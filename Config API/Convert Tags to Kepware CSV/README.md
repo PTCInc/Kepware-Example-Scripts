@@ -5,7 +5,10 @@ This script reads all tags and tag groups from a device via Config API and expor
 ## Install Python
 
 1. Download [Python](https://www.python.org/downloads/)
-2. During the install, check Add Python 3.x to PATH
+2. During the install
+    • Check box "Add python.exe to PATH" (can also be added later under "Advanced Options", check "Add Python to environment variables")
+    • Select "Customized Installation"
+    • Under "Optional Features", select "pip"
 3. Install the [Kepware Config API SDK](https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python) library
 
 ## Enable the Configuration API

@@ -3,7 +3,10 @@
 ## Install Python
 
 1. Download [Python](https://www.python.org/downloads/)
-2. During the install, check Add Python 3.x to PATH
+2. During the install
+    • Check box "Add python.exe to PATH" (can also be added later under "Advanced Options", check "Add Python to environment variables")
+    • Select "Customized Installation"
+    • Under "Optional Features", select "pip"
 3. From a CMD, type ‘pip install requests’ to install the [Requests](https://2.python-requests.org/en/master/) library
 
 ## Enable the Configuration API
