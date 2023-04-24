@@ -5,7 +5,10 @@ This script is to be run on the secondary server and will disable or enable all 
 ## Install Python
 
 1. Download [Python](https://www.python.org/downloads/)
-2. During the install, check Add Python 3.x to PATH
+2. During the install
+    • Check box "Add python.exe to PATH" (can also be added later under "Advanced Options", check "Add Python to environment variables")
+    • Select "Customized Installation"
+    • Under "Optional Features", select "pip"
 3. From a CMD, type ‘pip install requests’ to install the Requests library
 
 ## Enable the Configuration API on the Primary and Secondary servers
