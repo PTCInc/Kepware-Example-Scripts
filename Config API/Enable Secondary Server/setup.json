@@ -1,5 +1,5 @@
 {
-	"primaryHost" : "192.168.192.146",
+	"primaryHost" : "192.168.13.132",
 	"primaryPort" : "57412",
 	"secondaryHost" : "127.0.0.1",
 	"secondaryPort" : "57412",

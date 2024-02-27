@@ -9,7 +9,7 @@
 # supported features including devices, DataLogger groups, IoT Gateway Agents, 
 # Schedules and EFM Exporters when the primary server goes offline.  The health 
 # of the primary is determined by verifying the port for the Configuration API is open, but a 
-# ping can also be used.
+# raw socket can also be used.
 # 
 # Requires:
 # Python on secondary Kepware server PC with Kepconfig package
@@ -42,18 +42,6 @@ def get_setup_parameters(path):
         return data
     except Exception as e:
         print("[Exception] Load failed - {}".format(e))
-        return False
-
-# Checks network path of Kepware host on the network. Only provides status of network path, not running of 
-# runtime or Config API service (since no port or data collection from API is done.)
-def check_ping(server: server):
-    host = server.host
-    try:
-        print("Pinging {}".format(host))
-        param = '-n' if platform.system().lower()=='windows' else '-c'
-        command = ['ping', param, '1', host]
-        return subprocess.call(command) == 0
-    except:
         return False
 
 # Checks Socket of Config API service. Only provides status of port open, not running of 
@@ -226,10 +214,6 @@ if __name__ == "__main__":
             if secondaryAvailable:
                 print(f"{datetime.datetime.now()} - [Warning] Secondary not available - Please ensure Configuration API is enabled")
             secondaryAvailable = False
-
-        # or use a ping
-        #primaryAvailable = check_ping(primaryHost)
-        #secondaryAvailable = check_ping(secondaryHost)
 
         # if connection is lost, assume state is unknown
         if not primaryAvailable: primaryState = None
