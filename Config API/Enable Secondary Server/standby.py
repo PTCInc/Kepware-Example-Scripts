@@ -187,6 +187,7 @@ if __name__ == "__main__":
     apiUsername = setupData['apiUsername']
     apiPassword = setupData['apiPassword']
     useHttps = setupData['HTTPS']
+    monitorInterval = setupData['monitorInterval']
 
     # Create Server connection references to use
     primaryServer =  server(primaryHost, primaryPort, apiUsername, apiPassword, https= useHttps)
@@ -207,7 +208,7 @@ if __name__ == "__main__":
     while True:
         # check health by connecting to the Configuration API's port and querying project properties
         # can be substituted with check_socket() if desired.
-        # Supported in Kepware v6.13 or later. Use check_socket() for older versions.
+        # check_state() is supported in Kepware v6.13 or later. Use check_socket() for older versions.
         if check_state(primaryServer):
             if not primaryAvailable:
                 print(f"{datetime.datetime.now()} - Primary is available")
@@ -256,4 +257,4 @@ if __name__ == "__main__":
                     print("{} - Secondary has been enabled".format(datetime.datetime.now()))
             pass
 
-        time.sleep(1)
+        time.sleep(monitorInterval)

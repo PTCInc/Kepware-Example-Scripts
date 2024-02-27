@@ -6,5 +6,6 @@
 	"apiUsername" : "Administrator",
 	"apiPassword" : "",
 	"HTTPS": false,
-	"trustAllCerts": true
+	"trustAllCerts": true,
+    "monitorInterval": 1
 }
