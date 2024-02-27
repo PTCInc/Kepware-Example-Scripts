@@ -44,7 +44,10 @@ def get_setup_parameters(path):
         print("[Exception] Load failed - {}".format(e))
         return False
 
-def check_ping(host):
+# Checks network path of Kepware host on the network. Only provides status of network path, not running of 
+# runtime or Config API service (since no port or data collection from API is done.)
+def check_ping(server: server):
+    host = server.host
     try:
         print("Pinging {}".format(host))
         param = '-n' if platform.system().lower()=='windows' else '-c'
@@ -55,7 +58,9 @@ def check_ping(host):
 
 # Checks Socket of Config API service. Only provides status of port open, not running of 
 # runtime or Config API service (since any app can open the port)
-def check_socket(host,port):
+def check_socket(server: server):
+    host = server.host
+    port = server.port
     s =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(1)
     try:
@@ -70,9 +75,11 @@ def check_socket(host,port):
 # Check server status via API call, any non 200 response will throw an 
 # KepHTTPerror or KepURLerror exception and is a sign that the config API service
 # or runtime service is not running
+# 
+# Supported in Kepware v6.13 or later. Use check_socket() for older versions.
 def check_state(server: server):
     try:
-        r = server.get_project_properties()
+        r = server.get_info()
         return True
     except:
         return False
@@ -199,7 +206,8 @@ if __name__ == "__main__":
 
     while True:
         # check health by connecting to the Configuration API's port and querying project properties
-        # can be substituted with check_port() if desired
+        # can be substituted with check_socket() if desired.
+        # Supported in Kepware v6.13 or later. Use check_socket() for older versions.
         if check_state(primaryServer):
             if not primaryAvailable:
                 print(f"{datetime.datetime.now()} - Primary is available")
