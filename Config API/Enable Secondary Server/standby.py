@@ -9,18 +9,27 @@
 # supported features including devices, DataLogger groups, IoT Gateway Agents, 
 # Schedules and EFM Exporters when the primary server goes offline.  The health 
 # of the primary is determined by verifying the port for the Configuration API is open, but a 
-# ping can also be used.
+# raw socket can also be used.
 # 
 # Requires:
-# Python on secondary Kepware server PC with Requests library
+# Python on secondary Kepware server PC with Kepconfig package
+# 
+# Update History:
+# 0.2.0:    Updated to leverage Kepconfig package 
+#           Added HTTPS support
+#           Use API call instead of port check for status validation
 #
+# Version:  0.2.0
 # ******************************************************************************/
 
 import json
-import requests
 import time
 import datetime
 import socket
+from kepconfig.connection import server
+from kepconfig.connectivity import channel, device
+from kepconfig.datalogger import log_group
+from kepconfig.iot_gateway import agent, MQTT_CLIENT_AGENT, REST_CLIENT_AGENT, REST_SERVER_AGENT
 
 import platform
 import subprocess
@@ -35,16 +44,11 @@ def get_setup_parameters(path):
         print("[Exception] Load failed - {}".format(e))
         return False
 
-def check_ping(host):
-    try:
-        print("Pinging {}".format(host))
-        param = '-n' if platform.system().lower()=='windows' else '-c'
-        command = ['ping', param, '1', host]
-        return subprocess.call(command) == 0
-    except:
-        return False
-
-def check_socket(host,port):
+# Checks Socket of Config API service. Only provides status of port open, not running of 
+# runtime or Config API service (since any app can open the port)
+def check_socket(server: server):
+    host = server.host
+    port = server.port
     s =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(1)
     try:
@@ -56,155 +60,185 @@ def check_socket(host,port):
     finally:
         s.close()
 
-def objects(host,port,state):
-    baseUrl = "http://{}:{}/config/v1/project".format(host, port)
-    
-    #convert a bool to a string
-    sState = str(state).lower()
-    
+# Check server status via API call, any non 200 response will throw an 
+# KepHTTPerror or KepURLerror exception and is a sign that the config API service
+# or runtime service is not running
+# 
+# Supported in Kepware v6.13 or later. Use check_socket() for older versions.
+def check_state(server: server):
     try:
-        #Check for Channels
-        url = baseUrl + "/channels"
-        enableProperty = "servermain.DEVICE_DATA_COLLECTION"
-
-        channelProperties = get_properties(url,host,port)
-        
-        for eachChannel in channelProperties:
-            thisChannel = (eachChannel['common.ALLTYPES_NAME'])
-
-            #Check for Devices within Channel
-            deviceUrl = url + "/" + thisChannel + "/devices"
-            deviceProperties = get_properties(deviceUrl,host,port) 
-
-            if deviceProperties: set_properties(deviceProperties,deviceUrl,enableProperty,sState)
-
-        #Check for DataLogger groups
-        url = baseUrl + "/_datalogger/log_groups"
-        enableProperty = "datalogger.LOG_GROUP_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-      
-        #Check for MQTT clients
-        url = baseUrl + "/_iot_gateway/mqtt_clients"
-        enableProperty = "iot_gateway.AGENTTYPES_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-
-        #Check for REST clients
-        url = baseUrl + "/_iot_gateway/rest_clients"
-        enableProperty = "iot_gateway.AGENTTYPES_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-        
-        #Check for REST servers
-        url = baseUrl + "/_iot_gateway/rest_servers"
-        enableProperty = "iot_gateway.AGENTTYPES_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-        
-        #Check for Schedules
-        url = baseUrl + "/_scheduler/schedules"
-        enableProperty = "scheduler.SCHEDULE_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-        
-        #Check for EFM exporters
-        url = baseUrl + "/_efmexporter/poll_groups"
-        enableProperty = "efm_exporter.POLLGROUP_ENABLED"
-
-        properties = get_properties(url,host,port)
-        if properties: set_properties(properties,url,enableProperty,sState)
-
+        r = server.get_info()
         return True
-
-    except Exception as e:
-        print("[Exception] Failed - {}".format(e))
-        return False
-
-def get_properties(url,host,port):
-    try:
-        response = requests.get(url, auth=(apiUsername, apiPassword))
-        if response:
-            return json.loads(response.text)
-        else:
-            return False        
     except:
-        empty = {}
-        return empty
-
-def set_properties(properties,url,enableProperty,sState):
-    try:
-        for each in properties:
-            name = (each['common.ALLTYPES_NAME'])
-            setUrl = url + "/" + name
-            payload = "{{\"FORCE_UPDATE\": true,\"{}\": {}}}".format(enableProperty,sState)
-            response = requests.put(setUrl, auth=(apiUsername, apiPassword), data=(payload))
-
-            message = "- {} - ".format(name)
-            if not response:
-                message = message + "An error has occurred: " + str(response.text)
-                print(message)        
-
-    except Exception as e:
-        print("[Exception] Failed to set property - {}".format(e))
         return False
 
-# load setup parameters
-setupData = get_setup_parameters('./setup.json')
+def objects(server: server, sState):
+    #Check for Channels
+    enableProperty = "servermain.DEVICE_DATA_COLLECTION"
+    try:
+        channelProperties = channel.get_all_channels(server)
+    except:
+            channelProperties = []
 
-# assign global variables
-primaryHost = setupData['primaryHost']
-primaryPort = setupData['primaryPort']
-secondaryHost = setupData['secondaryHost']
-secondaryPort = setupData['secondaryPort']
-apiUsername = setupData['apiUsername']
-apiPassword = setupData['apiPassword']
+    for eachChannel in channelProperties:
+        thisChannel = eachChannel['common.ALLTYPES_NAME']
 
-# be sure to use explicit operators (== or !=) to compare values since this is somewhat of a tri-state bool
-# none = unknown, true = objects are enabled, false = objects are disabled
-primaryState = None
-secondaryState = None
+        #Check for Devices within Channel
+        try:
+            deviceProperties = device.get_all_devices(server, thisChannel)
+        except:
+            deviceProperties = []
 
-while True:
-    # check health by connecting to the Configuration API's port
-    primaryAvailable = check_socket(primaryHost,primaryPort)
-    secondaryAvailable = check_socket(secondaryHost,secondaryPort)
+        for eachDevice in deviceProperties:
+            thisDevice = eachDevice['common.ALLTYPES_NAME']
+            try:
+                result = device.modify_device(server, f'{thisChannel}.{thisDevice}', DATA={enableProperty: sState}, force=True)
+            except Exception as e:
+                print("[Exception] Failed to set property - {}".format(e))
 
-    if not secondaryAvailable:
-        print("{} - [Warning] Secondary not available - Please ensure Configuration API is enabled".format(datetime.datetime.now()))
+    #Check for DataLogger groups
+    enableProperty = "datalogger.LOG_GROUP_ENABLED"
+    try:
+        logGroupProperties = log_group.get_all_log_groups(server)
+    except:
+        logGroupProperties = []
 
-    # or use a ping
-    #primaryAvailable = check_ping(primaryHost)
-    #secondaryAvailable = check_ping(secondaryHost)
+    for eachLogGroup in logGroupProperties:
+        eachLogGroup[enableProperty] = sState
+        try:
+            result = log_group.modify_log_group(server, DATA= eachLogGroup, force= True)
+        except Exception as e:
+            print("[Exception] Failed to set property - {}".format(e))
+    
+    #Check for MQTT clients
+    enableProperty = "iot_gateway.AGENTTYPES_ENABLED"
+    try:
+        agentProperties = agent.get_all_iot_agents(server, MQTT_CLIENT_AGENT)
+        agentProperties.extend(agent.get_all_iot_agents(server, REST_CLIENT_AGENT))
+        agentProperties.extend(agent.get_all_iot_agents(server, REST_SERVER_AGENT))
+    except:
+        agentProperties = []
+    
+    for eachAgent in agentProperties:
+        eachAgent[enableProperty] = sState
+        try:
+            result = agent.modify_iot_agent(server,eachAgent, force= True)
+        except Exception as e:
+            print("[Exception] Failed to set property - {}".format(e))
+    
+    #Check for Schedules
+    url = f"{server.url}/project/_scheduler/schedules"
+    enableProperty = "scheduler.SCHEDULE_ENABLED"
+    try:
+        result = server._config_get(url)
+        schedProperties = result.payload
+    except:
+        schedProperties = []
+    
+    for eachSched in schedProperties:
+        eachSched[enableProperty] = sState
+        eachSched['FORCE_UPDATE'] = True
+        try:
+            result = server._config_update(f'{url}/{eachSched["common.ALLTYPES_NAME"]}', DATA= eachSched)
+        except Exception as e:
+            print("[Exception] Failed to set property - {}".format(e))
+    
+    #Check for EFM exporters
+    url = f"{server.url}/project/_efmexporter/poll_groups"
+    enableProperty = "efm_exporter.POLLGROUP_ENABLED"
 
-    # if connection is lost, assume state is unknown
-    if not primaryAvailable: primaryState = None
-    if not secondaryAvailable: secondaryState = None
+    try:
+        result = server._config_get(url)
+        pollGroupProperties = result.payload
+    except:
+        pollGroupProperties = []
+    
+    for eachPollGroup in pollGroupProperties:
+        eachPollGroup[enableProperty] = sState
+        eachPollGroup['FORCE_UPDATE'] = True
+        try:
+            result = server._config_update(f'{url}/{eachPollGroup["common.ALLTYPES_NAME"]}', DATA= eachPollGroup)
+        except Exception as e:
+            print("[Exception] Failed to set property - {}".format(e))
 
-    if primaryAvailable:
-        # enable primary if needed
-        if primaryState != True:
-            result = objects(primaryHost,primaryPort,True)
-            if result: 
-                primaryState = True
-                print("{} - Primary has been enabled".format(datetime.datetime.now()))
-        # only attempt to disable the secondary when it's available to avoid errors
-        if secondaryAvailable and secondaryState != False:
-            result = objects(secondaryHost,secondaryPort,False)
-            if result: 
-                secondaryState = False 
-                print("{} - Secondary has been disabled".format(datetime.datetime.now()))
-    else:
-        # enable secondary if needed. not necessary to disable primary since it's unavailabe 
-        if secondaryAvailable and secondaryState != True:
-            result = objects(secondaryHost,secondaryPort,True)
-            if result: 
-                secondaryState = True
-                print("{} - Secondary has been enabled".format(datetime.datetime.now()))
+    return True
 
-    time.sleep(1)
+if __name__ == "__main__":
+    # load setup parameters
+    setupData = get_setup_parameters('./Config API/Enable Secondary Server/setup.json')
+
+    # assign global variables
+    primaryHost = setupData['primaryHost']
+    primaryPort = setupData['primaryPort']
+    secondaryHost = setupData['secondaryHost']
+    secondaryPort = setupData['secondaryPort']
+    apiUsername = setupData['apiUsername']
+    apiPassword = setupData['apiPassword']
+    useHttps = setupData['HTTPS']
+    monitorInterval = setupData['monitorInterval']
+
+    # Create Server connection references to use
+    primaryServer =  server(primaryHost, primaryPort, apiUsername, apiPassword, https= useHttps)
+    secondaryServer = server(secondaryHost, secondaryPort, apiUsername, apiPassword, https= useHttps)
+
+    # Handle self-signed certs if needed
+    if setupData['trustAllCerts']:
+        primaryServer.SSL_trust_all_certs = True
+        secondaryServer.SSL_trust_all_certs = True
+
+    # be sure to use explicit operators (== or !=) to compare values since this is somewhat of a tri-state bool
+    # none = unknown, true = objects are enabled, false = objects are disabled
+    primaryState = None
+    secondaryState = None
+    primaryAvailable = None
+    secondaryAvailable = None
+
+    while True:
+        # check health by connecting to the Configuration API's port and querying project properties
+        # can be substituted with check_socket() if desired.
+        # check_state() is supported in Kepware v6.13 or later. Use check_socket() for older versions.
+        if check_state(primaryServer):
+            if not primaryAvailable:
+                print(f"{datetime.datetime.now()} - Primary is available")
+            primaryAvailable = True
+        else: 
+            if primaryAvailable:
+                print(f"{datetime.datetime.now()} - [Warning] Primary is unavailable")
+            primaryAvailable = False
+
+        if check_state(secondaryServer):
+            if not secondaryAvailable:
+                print(f"{datetime.datetime.now()} - Secondary is available")
+            secondaryAvailable = True
+        else: 
+            if secondaryAvailable:
+                print(f"{datetime.datetime.now()} - [Warning] Secondary not available - Please ensure Configuration API is enabled")
+            secondaryAvailable = False
+
+        # if connection is lost, assume state is unknown
+        if not primaryAvailable: primaryState = None
+        if not secondaryAvailable: secondaryState = None
+
+        if primaryAvailable:
+            # enable primary if needed
+            if primaryState != True:
+                result = objects(primaryServer,True)
+                if result: 
+                    primaryState = True
+                    print("{} - Primary has been enabled".format(datetime.datetime.now()))
+            # only attempt to disable the secondary when it's available to avoid errors
+            if secondaryAvailable and secondaryState != False:
+                result = objects(secondaryServer,False)
+                if result: 
+                    secondaryState = False 
+                    print("{} - Secondary has been disabled".format(datetime.datetime.now()))
+        else:
+            # enable secondary if needed. not necessary to disable primary since it's unavailabe 
+            if secondaryAvailable and secondaryState != True:
+                result = objects(secondaryServer,True)
+                if result: 
+                    secondaryState = True
+                    print("{} - Secondary has been enabled".format(datetime.datetime.now()))
+            pass
+
+        time.sleep(monitorInterval)

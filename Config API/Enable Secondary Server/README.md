@@ -9,7 +9,7 @@ This script is to be run on the secondary server and will disable or enable all 
     • Check box "Add python.exe to PATH" (can also be added later under "Advanced Options", check "Add Python to environment variables")
     • Select "Customized Installation"
     • Under "Optional Features", select "pip"
-3. From a CMD, type ‘pip install requests’ to install the Requests library
+3. From a CMD, type ‘pip install kepconfig’ to install the [Kepconfig](https://github.com/PTCInc/Kepware-ConfigAPI-SDK-Python) package
 
 ## Enable the Configuration API on the Primary and Secondary servers
 
@@ -20,7 +20,7 @@ This script is to be run on the secondary server and will disable or enable all 
 ## Prepare Script
 
 1. View [setup.json](setup.json) in a text editor
-2. Set source, destination, and folder locations
+2. Set primary and secondary server Configuration API parameters
 3. Set username and password for the API user
 
 ## Run the Script
