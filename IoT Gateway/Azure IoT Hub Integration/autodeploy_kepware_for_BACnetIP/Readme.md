@@ -5,9 +5,9 @@ This script automatically creates a complete Kepware project file based on a lis
 ## Dependencies
 
 - [Azure CLI 2.x.x](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-- [Azure CLI IoT Extension](https://docs.microsoft.com/en-us/azure/iot-pnp/howto-install-pnp-cli) (use the CLI to run 'az extension add --name azure-cli-iot-ext')
+- [Azure CLI IoT Extension](https://github.com/Azure/azure-iot-cli-extension) (use the CLI to run 'az extension add --name azure-iot')
 - [Python 3.7 or above](https://www.python.org/downloads/)
-- Python [Requests](https://2.python-requests.org/en/master/) library
+- Python [Requests](https://pypi.org/project/requests/) library
 
 ## Instructions
 
