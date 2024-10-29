@@ -8,7 +8,7 @@ Examples are orgainized by component within Kepware with readme files providing 
 
 As stated in the icense of this repository, these profiles are provided "as-is". For any questions or problems that are encountered, please open an Issue within the repository. See [Repository Guidelines](docs/Repo-Guidelines.md) for more information.
 
-##Visit
+## Visit
 
 - [Kepware.com](https://www.kepware.com/)
 - [PTC.com](https://www.ptc.com/)
