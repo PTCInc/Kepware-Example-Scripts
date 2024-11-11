@@ -6,7 +6,7 @@
 ## To use:
 - Add desired tags to Log Group using GUI or API
 - Update [csvs/logGroup.csv](csvs/logGroup.csv) with target Log Group
-- Update [csvs/columnMappings.csv](csvs/logGroup.csv) with desired tag mapping scheme, data types and lengths
+- Update [csvs/columnMappings.csv](csvs/columnMappings.csv) with desired tag mapping scheme, data types and lengths
 - Update [csvs/auth.csv](csvs/auth.csv)with Kepware Config API username and password
 
 ## Notes:
