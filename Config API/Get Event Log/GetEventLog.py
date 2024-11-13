@@ -47,7 +47,7 @@ def HTTPErrorHandler(err):
         print('Different Exception Received: {}'.format(err))
 
 # Calculate a 30 minutes polling interval for the Event Log retrieval
-currentDate = datetime.datetime.utcnow()
+currentDate = datetime.datetime.now(datetime.UTC)
 hoursSubstracted = datetime.timedelta(minutes = INTERVAL)
 previousDate = currentDate - hoursSubstracted
 
@@ -65,6 +65,6 @@ try:
 		#Get the events from the past half hour - max number of events is 1000
 			print('Event Log Poll Start Date (UTC):',previousDate,'---- Event Log Poll End Date (UTC):',currentDate)
 			print("\n")
-			print("{} - {}".format("Thingworx Kepware Server Event Log", json.dumps(server.get_event_log(1000, previousDate, datetime.datetime.utcnow()), indent=4)))		                                                                                                                             
+			print("{} - {}".format("Thingworx Kepware Server Event Log", json.dumps(server.get_event_log(1000, previousDate, datetime.datetime.now(datetime.UTC)), indent=4)))		                                                                                                                             
 except Exception as err:
     HTTPErrorHandler(err)
