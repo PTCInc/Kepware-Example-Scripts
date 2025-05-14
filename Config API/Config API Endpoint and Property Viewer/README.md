@@ -19,6 +19,12 @@ This provides a simple UI application to help navigate the documentation endpoin
 ## Use the Application
 
 1. Open a CMD and cd to the [API_gui.py](API_gui.py) location before launching the script or double-click on [API_gui.py](API_gui.py) from File Explorer. This will launch the UI.
+
+![](../../docs/images/api-viewer-main-ui.png)
+
 2. Provide the correct parameters to connect to the Kepware Server instance and click the *Connect* button.
 3. Once connected navigate the components in the tree by double clicking on each item. If there are children of the object, they will appear.
+
+![](../../docs/images/api-viewer-connected-ui.png)
+
 4. Search is available for the text within the property definition window.
