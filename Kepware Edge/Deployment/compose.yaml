@@ -1,0 +1,52 @@
+##############################################################################
+# Example docker-compose.yaml file for composing a Kepware Edge service
+#
+# Refer to https://compose-spec.io/ for more
+# information about Compose specification and options.
+# 
+# Update the placeholders in angle brackets <> with appropriate values
+# 
+# Version history:
+#  0.1 - Initial version
+# 
+# Version 0.1
+# 
+# Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
+# See License.txt in the project root for
+# license information.
+##############################################################################
+volumes:
+# Generic volumes to store Kepware Edge configuration data and other recommended mounts.
+  kepwareedge-config:
+  kepwareedge-user_data:
+  kepwareedge-secrets:
+services:
+  kepedge:      
+    environment: 
+      # Set to TRUE or FALSE to load a sample project at container creation
+      # Uncomment the line below to use a sample project
+      # - USE_SAMPLE_PROJECT=TRUE
+
+      # Update <admin_password> with a secure password. Not recommended for production.
+      # Secure password passing is handled via secrets file via secrets folder in production.
+      - EDGEADMINPW=<admin_password>
+      
+    # Specifiy the image location for the container, typically a repository/tag
+    # Update <version> with the version of Kepware Edge you are using
+    image: kepedge:<version>
+    network_mode: bridge
+    ports:
+      - "57513:57513"
+      # - "57413:57413" # Uncomment this line for HTTP Config API access
+      - "49330:49330"
+    volumes:
+    # Specify the volume mount locations on the host for the container to share
+    # Below are examples of using volumes for storage mounting
+      - kepwareedge-secrets:/opt/kepedge/v1/secrets/
+      - kepwareedge-user_data:/opt/kepedge/v1/user_data/
+      - kepwareedge-config:/opt/kepedge/v1/.config/
+    # Below are examples of using bind mounts for storage mounting
+    # Update <host mount> with host location to mount the container volumes
+      # - <host mount>/secrets/:/opt/kepedge/v1/secrets/
+      # - <host mount>/user_data/:/opt/kepedge/v1/user_data/
+      # - <host mount>/config/:/opt/kepedge/v1/.config/
