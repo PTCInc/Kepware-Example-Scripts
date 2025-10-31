@@ -1,0 +1,101 @@
+##############################################################################
+# Example manifest.yaml file for composing a Kepware Edge pod in Kubernetes
+#
+# Refer to https://kubernetes.io/docs/reference/kubernetes-api/ for more
+# information about Kubernetes API specification and options.
+# 
+# Update the placeholders in angle brackets <> with appropriate values
+# 
+# Version history:
+#  0.1 - Initial version
+# 
+# Version 0.1
+# 
+# Copyright (c) PTC Inc. and/or all its affiliates. All rights reserved.
+# See License.txt in the project root for
+# license information.
+##############################################################################
+
+---
+# Generic PVC to store Kepware Edge configuration data and other recommended mounts.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kepedge-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Generic Service to expose Kepware Edge ports
+apiVersion: v1
+kind: Service
+metadata:
+  name: kepedgeportaccess
+spec:
+  selector:
+    app: kepedge
+  ports:
+  - name: ua
+    port: 49330
+    targetPort: 49330
+  - name: api-https
+    port: 57513
+    targetPort: 57513
+  # - name: api-http # Uncomment this section for HTTP Config API access
+  #   port: 57413
+  #   targetPort: 57413
+  type: LoadBalancer
+  sessionAffinity: None
+
+---
+
+apiVersion: v1 
+kind: Pod
+metadata:
+  name: kepedge
+  labels: 
+    app: kepedge
+spec:
+  # Security context may be needed depending on configuration to ensure proper file permissions
+  # Uncomment and adjust the values as needed
+  # securityContext:
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   fsGroup: 1000
+  containers:
+  - name: kepedge
+    # Specifiy the image location for the container, typically a repository/tag
+    # Update <version> with the version of Kepware Edge you are using
+    image: kepedge:<version>
+    env:
+    # Set to TRUE or FALSE to load a sample project at container creation
+    # Uncomment below to use a sample project
+    # - name: USE_SAMPLE_PROJECT
+    #   value: "TRUE"
+    - name: EDGEADMINPW
+      value: <admin_password>
+    ports:
+    - containerPort: 49330
+    - containerPort: 57513
+    # - containerPort: 57413 # Uncomment this line for HTTP Config API access
+    volumeMounts:
+    # Volume mounts configure to use subPaths to separate Kepware Edge data within a single PVC
+    - name: kepedge-storage
+      mountPath: /opt/kepedge/v1/user_data/
+      subPath: KE/user_data
+    - name: kepedge-storage
+      mountPath: /opt/kepedge/v1/.config/
+      subPath: KE/config
+    - name: kepedge-storage
+      mountPath: /opt/kepedge/v1/secrets/
+      subPath: KE/secrets
+  volumes:
+    - name: kepedge-storage
+      persistentVolumeClaim:
+       claimName: kepedge-pvc
+
+---
