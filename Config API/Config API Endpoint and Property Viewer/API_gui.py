@@ -18,8 +18,10 @@
 #  *                access properties to HTTP Methods
 #  * 0.0.4:     Added Doc Endpoint Information to text box to provide user additional
 #  *            information
+#  * 0.0.5:     Added version to title bar
+#  *            Audit Log schema access for visualization
 #  * 
-#  * Version:     0.0.4
+#  * Version:     0.0.5
 # ******************************************************************************
 
 from tkinter import *
@@ -29,6 +31,8 @@ import json
 import re
 from widgets import searchbar, treevscroll, textscroll
 from server import server_doc
+
+VERSION = '0.0.5'
 
 COLUMNS = ['doc_path', 'endpoint', 'parent_endpoint']
 
@@ -114,6 +118,7 @@ class App(ttk.Frame):
         self.event_add('<<tree_select>>', '<Double-1>', '<Return>')
         self.treeframe.treev.tag_bind('item', '<<tree_select>>', self.item_click)
         self.treeframe.treev.tag_bind('root', '<<tree_select>>', self.root_click)
+        self.treeframe.treev.tag_bind('names', '<<tree_select>>', self.names_click)
 
         # Text Frame Object for Output of Documentation
         self.textframe = textscroll(self.dataframe, row=0)
@@ -203,6 +208,19 @@ class App(ttk.Frame):
         info = event.widget.item(item[0])
         r = self.server.get_doc(info['values'][COLUMNS.index('doc_path')])
         self.update_text_window(r, info['values'][COLUMNS.index('endpoint')], info['values'][COLUMNS.index('doc_path')])
+    
+    # Event for Names Branches
+    # Primarily used as a work around to access audit log schema. Doc endpoint does not provide context to 
+    # point to how to access property definitions or "schemas" which is a new paradigm for  audit log
+    def names_click(self, event: Event):
+        item = event.widget.selection()
+        info = event.widget.item(item[0])
+        if 'audit_log' in info['text']:
+            doc_url = '/config/v1/audit_log?content=schema'
+            r = self.server.get_doc(doc_url)
+            self.update_text_window(r, info['text'], doc_url)
+        else:
+            self.update_text_window()
     
     # Event for other branches
     def item_click(self, event: Event):
@@ -351,7 +369,7 @@ class App(ttk.Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.title("Kepware Server API Documentation Viewer")
+    root.title(f"Kepware Server API Documentation Viewer v{VERSION}")
     root.minsize(width=500, height=200)
     root.columnconfigure(0, minsize=200, weight=1)
     root.rowconfigure(0, weight=1)
